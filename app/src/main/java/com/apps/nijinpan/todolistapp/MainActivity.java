@@ -1,5 +1,6 @@
 package com.apps.nijinpan.todolistapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -38,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQ_CODE_TODO_EDIT);
             }
         });
-        setupUI(mockData());
+
+        todos = mockData();
+        adapter = new TodoListAdapter(this, todos);
+        ((ListView) findViewById(R.id.main_list_view)).setAdapter(adapter);
     }
 
     private void setupUI(List<Todo> todos) {
