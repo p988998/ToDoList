@@ -2,6 +2,7 @@ package com.apps.nijinpan.todolistapp;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,7 @@ import com.apps.nijinpan.todolistapp.models.Todo;
 import com.apps.nijinpan.todolistapp.utils.DateUtils;
 import com.apps.nijinpan.todolistapp.utils.UIUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class TodoEditActivity extends AppCompatActivity implements
@@ -67,13 +69,22 @@ public class TodoEditActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar c = getCalendarFromRemindDate();
+        c.set(year, monthOfYear, dayOfMonth);
+        remindDate = c.getTime();
+        dateTv.setText(DateUtils.dateToStringDate(remindDate));
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        // this method will be called after user has chosen time from the TimePickerDialog
+        Calendar c = getCalendarFromRemindDate();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
 
+        remindDate = c.getTime();
+        timeTv.setText(DateUtils.dateToStringTime(remindDate));
     }
     private void setupUI() {
         setContentView(R.layout.activity_todo_edit);
@@ -86,13 +97,13 @@ public class TodoEditActivity extends AppCompatActivity implements
 
         if (todo != null) {
             todoEdit.setText(todo.text);
-            //UIUtils.setTextViewStrikeThrough(todoEdit, todo.done);
+            UIUtils.setTextViewStrikeThrough(todoEdit, todo.done);
             completeCb.setChecked(todo.done);
 
             findViewById(R.id.todo_delete).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //delete();
+                    delete();
                 }
             });
         } else {
@@ -107,8 +118,41 @@ public class TodoEditActivity extends AppCompatActivity implements
             timeTv.setText(R.string.set_time);
         }
 
+        setupDatePicker();
+        //setupCheckbox();
         setupSaveButton();
 
+    }
+
+    private void setupDatePicker() {
+        dateTv.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Calendar c = getCalendarFromRemindDate();
+                Dialog dialog = new DatePickerDialog(
+                        TodoEditActivity.this,
+                        TodoEditActivity.this,
+                         c.get(Calendar.YEAR),
+                         c.get(Calendar.MONTH),
+                         c.get(Calendar.DAY_OF_MONTH));
+
+                dialog.show();
+            }
+        });
+
+        timeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c = getCalendarFromRemindDate();
+                Dialog dialog = new TimePickerDialog(
+                        TodoEditActivity.this,
+                        TodoEditActivity.this,
+                        c.get(Calendar.HOUR_OF_DAY),
+                        c.get(Calendar.MINUTE),
+                        true);
+                dialog.show();
+            }
+        });
     }
 
     private void setupSaveButton() {
@@ -134,5 +178,20 @@ public class TodoEditActivity extends AppCompatActivity implements
         result.putExtra(KEY_TODO, todo);
         setResult(Activity.RESULT_OK, result);
         finish();
+    }
+
+    private void delete() {
+        Intent result = new Intent();
+        result.putExtra(KEY_TODO_ID, todo.id);
+        setResult(Activity.RESULT_OK, result);
+        finish();
+    }
+
+    private Calendar getCalendarFromRemindDate() {
+        Calendar c = Calendar.getInstance();
+        if (remindDate != null) {
+            c.setTime(remindDate);
+        }
+        return c;
     }
 }

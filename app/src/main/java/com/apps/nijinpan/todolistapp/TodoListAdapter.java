@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.apps.nijinpan.todolistapp.models.Todo;
@@ -58,7 +59,14 @@ public class TodoListAdapter extends BaseAdapter {
 
         vh.todoText.setText(todo.text);
         vh.doneCheckBox.setChecked(todo.done);
-        //UIUtils.setTextViewStrikeThrough(vh.todoText, todo.done);
+        UIUtils.setTextViewStrikeThrough(vh.todoText, todo.done);
+
+        vh.doneCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                activity.updateTodo(position, isChecked);
+            }
+        });
 
         convertView.setOnClickListener( new View.OnClickListener(){
             @Override
