@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.apps.nijinpan.todolistapp.AlarmReceiver;
 
@@ -20,6 +21,6 @@ public class AlarmUtils {
 
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, date.getTime(), alarmIntent);
+        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, date.getTime(), alarmIntent);
     }
 }

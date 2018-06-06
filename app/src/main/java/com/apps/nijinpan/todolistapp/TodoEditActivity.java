@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.apps.nijinpan.todolistapp.models.Todo;
 import com.apps.nijinpan.todolistapp.utils.AlarmUtils;
@@ -83,6 +84,7 @@ public class TodoEditActivity extends AppCompatActivity implements
         Calendar c = getCalendarFromRemindDate();
         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
         c.set(Calendar.MINUTE, minute);
+        //c.set(Calendar.SECOND, 0);
 
         remindDate = c.getTime();
         timeTv.setText(DateUtils.dateToStringTime(remindDate));
