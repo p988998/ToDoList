@@ -20,6 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TodoEditActivity"></activity>
+
+        <receiver android:name=".AlarmReceiver"/>
     </application>
 
 </manifest>

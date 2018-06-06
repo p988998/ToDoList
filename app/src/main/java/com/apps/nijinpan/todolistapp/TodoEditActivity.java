@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.apps.nijinpan.todolistapp.models.Todo;
+import com.apps.nijinpan.todolistapp.utils.AlarmUtils;
 import com.apps.nijinpan.todolistapp.utils.DateUtils;
 import com.apps.nijinpan.todolistapp.utils.UIUtils;
 
@@ -173,6 +174,11 @@ public class TodoEditActivity extends AppCompatActivity implements
             todo.remindDate = remindDate;
         }
         todo.done = completeCb.isChecked();
+
+        if (remindDate != null) {
+            // fire alarm when saving the todo_item
+            AlarmUtils.setAlarm(this, remindDate);
+        }
 
         Intent result = new Intent();
         result.putExtra(KEY_TODO, todo);
