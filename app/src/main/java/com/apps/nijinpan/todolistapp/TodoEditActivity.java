@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -124,9 +126,29 @@ public class TodoEditActivity extends AppCompatActivity implements
         }
 
         setupDatePicker();
-        //setupCheckbox();
+        setupCheckbox();
         setupSaveButton();
 
+    }
+
+    private void setupCheckbox() {
+        completeCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                UIUtils.setTextViewStrikeThrough(todoEdit, isChecked);
+                todoEdit.setTextColor(isChecked ? Color.GRAY : Color.WHITE);
+            }
+        });
+
+        // use this wrapper to make it possible for users to click on the entire row
+        // to change the check box
+        View completeWrapper = findViewById(R.id.todo_detail_complete_wrapper);
+        completeWrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                completeCb.setChecked(!completeCb.isChecked());
+            }
+        });
     }
 
     private void setupDatePicker() {
