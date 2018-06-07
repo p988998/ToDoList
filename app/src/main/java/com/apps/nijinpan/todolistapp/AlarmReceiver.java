@@ -12,7 +12,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Calendar c = Calendar.getInstance();
-
+        Log.i("alarm time", c.getTime()+"");
         Toast.makeText(context, "alarm!", Toast.LENGTH_LONG).show();
     }
 }

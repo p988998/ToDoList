@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -87,6 +88,7 @@ public class TodoEditActivity extends AppCompatActivity implements
         //c.set(Calendar.SECOND, 0);
 
         remindDate = c.getTime();
+        Log.i("setting time", remindDate+"");
         timeTv.setText(DateUtils.dateToStringTime(remindDate));
     }
     private void setupUI() {
@@ -197,6 +199,7 @@ public class TodoEditActivity extends AppCompatActivity implements
 
     private Calendar getCalendarFromRemindDate() {
         Calendar c = Calendar.getInstance();
+        c.clear(Calendar.SECOND);
         if (remindDate != null) {
             c.setTime(remindDate);
         }
