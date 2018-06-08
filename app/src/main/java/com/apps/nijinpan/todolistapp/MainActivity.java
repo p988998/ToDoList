@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TodoListAdapter adapter;
     private List<Todo> todos;
+    //private Todo todo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +45,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //todos = mockData();
+
         loadData();
         adapter = new TodoListAdapter(this, todos);
         ((ListView) findViewById(R.id.main_list_view)).setAdapter(adapter);
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -115,6 +122,23 @@ public class MainActivity extends AppCompatActivity {
         todos = ModelUtils.read(this, TODOS, new TypeToken<List<Todo>>(){});
         if (todos == null) {
             todos = new ArrayList<>();
+        }
+        //below is used for data changed from notification action
+        Todo todo = getIntent().getParcelableExtra(TodoEditActivity.KEY_TODO);
+        if (todo != null){
+            boolean found = false;
+            for (int i = 0; i < todos.size(); ++i) {
+                Todo item = todos.get(i);
+                if (TextUtils.equals(item.id, todo.id)) {
+                    found = true;
+                    todos.set(i, todo);
+                    break;
+                }
+            }
+
+            if (!found) {
+                todos.add(todo);
+            }
         }
     }
 }

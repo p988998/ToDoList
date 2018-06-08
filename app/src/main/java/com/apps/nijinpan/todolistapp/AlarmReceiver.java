@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import static android.provider.Settings.Global.getString;
 
 
 public class AlarmReceiver extends BroadcastReceiver {
+    public static final String NOTIFY_TODO = "notification_todo";
     @Override
     public void onReceive(Context context, Intent intent) {
         final int notificationId = 100;
@@ -33,16 +35,22 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentText(todo.text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
                 ;
 
         Intent resultIntent = new Intent(context, TodoEditActivity.class);
-        resultIntent.putExtra(TodoEditActivity.KEY_TODO, todo);
-        resultIntent.putExtra(TodoEditActivity.KEY_NOTIFICATION_ID, notificationId);
+        resultIntent.putExtra(NOTIFY_TODO, todo);
+        //resultIntent.putExtra(TodoEditActivity.KEY_NOTIFICATION_ID, notificationId);
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(context,
-                0,
-                resultIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+//        PendingIntent resultPendingIntent = PendingIntent.getActivity(context,
+//                0,
+//                resultIntent,
+//                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(resultPendingIntent);
        // NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

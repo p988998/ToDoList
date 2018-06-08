@@ -44,6 +44,7 @@ public class TodoEditActivity extends AppCompatActivity implements
     private CheckBox completeCb;
 
     private Todo todo;
+    private Todo todoFromNotify;
     private Date remindDate;
 
 
@@ -52,19 +53,17 @@ public class TodoEditActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         todo = getIntent().getParcelableExtra(KEY_TODO);
+        todoFromNotify = getIntent().getParcelableExtra(AlarmReceiver.NOTIFY_TODO);
+        if(todoFromNotify != null){
+            todo = todoFromNotify;
+        }
         remindDate = todo != null
                 ? todo.remindDate
                 : null;
 
         setupUI();
-        cancelNotificationIfNeeded();
-    }
+        //cancelNotificationIfNeeded();
 
-    private void cancelNotificationIfNeeded() {
-        int notificationId = getIntent().getIntExtra(KEY_NOTIFICATION_ID,-1);
-        if (notificationId != -1) {
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(notificationId);
-        }
     }
 
 
@@ -100,17 +99,16 @@ public class TodoEditActivity extends AppCompatActivity implements
         //c.set(Calendar.SECOND, 0);
 
         remindDate = c.getTime();
-        Log.i("setting time", remindDate+"");
         timeTv.setText(DateUtils.dateToStringTime(remindDate));
     }
     private void setupUI() {
         setContentView(R.layout.activity_todo_edit);
         setupActionbar();
 
-        todoEdit = (EditText) findViewById(R.id.toto_detail_todo_edit);
-        dateTv = (TextView) findViewById(R.id.todo_detail_date);
-        timeTv = (TextView) findViewById(R.id.todo_detail_time);
-        completeCb = (CheckBox) findViewById(R.id.todo_detail_complete);
+        todoEdit = findViewById(R.id.toto_detail_todo_edit);
+        dateTv = findViewById(R.id.todo_detail_date);
+        timeTv = findViewById(R.id.todo_detail_time);
+        completeCb = findViewById(R.id.todo_detail_complete);
 
         if (todo != null) {
             todoEdit.setText(todo.text);
@@ -193,7 +191,7 @@ public class TodoEditActivity extends AppCompatActivity implements
     }
 
     private void setupSaveButton() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.todo_detail_done);
+        FloatingActionButton fab = findViewById(R.id.todo_detail_done);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -216,10 +214,16 @@ public class TodoEditActivity extends AppCompatActivity implements
             AlarmUtils.setAlarm(this, todo);
         }
 
-        Intent result = new Intent();
+//        Intent result = new Intent();
+        Intent result = new Intent(this, MainActivity.class);
         result.putExtra(KEY_TODO, todo);
         setResult(Activity.RESULT_OK, result);
-        finish();
+        if(todoFromNotify == null){
+            finish();
+        }else{
+            this.startActivity(result);
+        }
+
     }
 
     private void delete() {
