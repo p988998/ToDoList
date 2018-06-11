@@ -3,6 +3,7 @@ package com.apps.nijinpan.todolistapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -56,4 +57,5 @@ public class Todo implements Parcelable {
         dest.writeByte((byte) (done ? 1 : 0));
         dest.writeLong(remindDate != null ? remindDate.getTime() : 0);
     }
+
 }

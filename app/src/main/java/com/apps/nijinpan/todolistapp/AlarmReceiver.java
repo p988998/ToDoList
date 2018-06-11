@@ -13,10 +13,12 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.apps.nijinpan.todolistapp.models.Todo;
+import com.apps.nijinpan.todolistapp.utils.ModelUtils;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.Calendar;
 
-import static android.provider.Settings.Global.getString;
+
 
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -24,10 +26,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final int notificationId = 100;
-        Todo todo = intent.getParcelableExtra(TodoEditActivity.KEY_TODO);
+        Todo todo = null;
+        String jString = intent.getStringExtra(TodoEditActivity.KEY_TODO);
 
-        if (todo ==null){
-            todo = new Todo("test intent", Calendar.getInstance().getTime());
+        if (jString != null){
+            todo = ModelUtils.toObject(jString, new TypeToken<Todo>(){});
+        }else{
+            todo = new Todo("pass intent fail", Calendar.getInstance().getTime());
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, TodoEditActivity.KEY_TODO)
                 .setSmallIcon(R.drawable.ic_adb_white_24dp)
@@ -41,7 +46,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent resultIntent = new Intent(context, TodoEditActivity.class);
         resultIntent.putExtra(NOTIFY_TODO, todo);
         //resultIntent.putExtra(TodoEditActivity.KEY_NOTIFICATION_ID, notificationId);
-
 //        PendingIntent resultPendingIntent = PendingIntent.getActivity(context,
 //                0,
 //                resultIntent,
