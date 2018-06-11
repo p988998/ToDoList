@@ -25,7 +25,10 @@
             android:parentActivityName=".MainActivity">
         </activity>
 
-        <receiver android:name=".AlarmReceiver"/>
+        <receiver android:name=".AlarmReceiver">
+
+        </receiver>
+
     </application>
 
 </manifest>

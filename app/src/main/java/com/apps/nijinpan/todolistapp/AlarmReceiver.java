@@ -9,8 +9,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.apps.nijinpan.todolistapp.models.Todo;
 
@@ -24,11 +27,23 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final int notificationId = 100;
-        Todo todo = intent.getParcelableExtra(TodoEditActivity.KEY_TODO);
+          final String TAG = "MyBroadcastReceiver";
+        Todo todo = (Todo)intent.getParcelableExtra(TodoEditActivity.KEY_TODO);
+        String str = intent.getStringExtra("test string");
 
         if (todo ==null){
             todo = new Todo("test intent", Calendar.getInstance().getTime());
         }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Action: " + intent.getAction() + "\n");
+        sb.append("catogary: " + intent.getCategories() + "\n");
+        sb.append("data: " + intent.getDataString() + "\n");
+        sb.append("URI: " + intent.toUri(Intent.URI_INTENT_SCHEME).toString() + "\n");
+        String log = sb.toString();
+        Log.d(TAG, log);
+        Toast.makeText(context, log, Toast.LENGTH_LONG).show();
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, TodoEditActivity.KEY_TODO)
                 .setSmallIcon(R.drawable.ic_adb_white_24dp)
                 .setContentTitle(context.getString(R.string.app_name))

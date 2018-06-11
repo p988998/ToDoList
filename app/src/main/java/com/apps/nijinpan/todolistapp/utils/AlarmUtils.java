@@ -21,8 +21,18 @@ public class AlarmUtils {
         }
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        StringBuilder sb = new StringBuilder();
+
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(TodoEditActivity.KEY_TODO, todo);
+        intent.putExtra("test string", "aaa");
+
+        sb.append("Action: " + intent.getAction() + "\n");
+        sb.append("catogary: " + intent.getCategories() + "\n");
+        sb.append("data: " + intent.getDataString() + "\n");
+        String log = sb.toString();
+        Log.d("action",log);
+
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmMgr.setExact(AlarmManager.RTC_WAKEUP, todo.remindDate.getTime(), alarmIntent);
     }
